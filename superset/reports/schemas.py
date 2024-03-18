@@ -22,6 +22,7 @@ from flask_babel import gettext as _
 from marshmallow import fields, Schema, validate, validates, validates_schema
 from marshmallow.validate import Length, Range, ValidationError
 from pytz import all_timezones
+from superset.reports.notifications.s3 import S3SubTypes
 
 from superset.reports.models import (
     ReportCreationMethod,
@@ -211,6 +212,9 @@ class ReportSchedulePostSchema(Schema):
         dump_default=None,
     )
     force_screenshot = fields.Boolean(dump_default=False)
+    aws_key = fields.String(default=None, missing=None)
+    aws_secret_key = fields.String(default=None, missing=None)
+    aws_s3_types = fields.String(default=None, missing=None)
     custom_width = fields.Integer(
         metadata={
             "description": _("Custom width of the screenshot in pixels"),
@@ -250,6 +254,23 @@ class ReportSchedulePostSchema(Schema):
             if "database" in data:
                 raise ValidationError(
                     {"database": ["Database reference is not allowed on a report"]}
+                )
+    @validates_schema
+    def validate_aws_fields(
+        self, data, **kwargs
+    ):  # pylint: disable=unused-argument,no-self-use
+
+        if (
+            data["recipients"][0]["type"] == ReportRecipientType.S3
+            and data["aws_S3_types"] == S3SubTypes.S3_CRED
+        ):
+            if data["aws_key"] is None or data["aws_secretKey"] is None:
+                raise ValidationError(
+                    {
+                        "aws credentials": [
+                            "Both AWS keys and Aws secret keys are required"
+                        ]
+                    }
                 )
 
 
@@ -350,6 +371,9 @@ class ReportSchedulePutSchema(Schema):
         required=False,
         default=None,
     )
+    aws_key = fields.String(default=None, missing=None)
+    aws_secret_key = fields.String(default=None, missing=None)
+    aws_s3_types = fields.String(default=None, missing=None)
 
     @validates("custom_width")
     def validate_custom_width(

@@ -34,6 +34,13 @@ class NotificationContent:
     url: Optional[str] = None  # url to chart/dashboard for this screenshot
     embedded_data: Optional[pd.DataFrame] = None
 
+@dataclass
+class AwsConfiguration:
+    # pylint: disable=invalid-name
+    aws_key: Optional[str] = None
+    aws_secret_key: Optional[str] = None
+    aws_s3_types: Optional[str] = None
+
 
 class BaseNotification:  # pylint: disable=too-few-public-methods
     """
@@ -55,10 +62,13 @@ class BaseNotification:  # pylint: disable=too-few-public-methods
         cls.plugins.append(cls)
 
     def __init__(
-        self, recipient: ReportRecipients, content: NotificationContent
+        self, recipient: ReportRecipients,
+        content: NotificationContent,
+        aws_configuration: AwsConfiguration = None
     ) -> None:
         self._recipient = recipient
         self._content = content
+        self._aws_configuration = aws_configuration
 
     def send(self) -> None:
         raise NotImplementedError()
