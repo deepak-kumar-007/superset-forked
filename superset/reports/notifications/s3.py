@@ -82,14 +82,14 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
         files = self._get_inline_files()
         file_type = "csv" if self._content.csv else "png"
         bucket_name = json.loads(self._recipient.recipient_config_json)["target"]
-        s3_Subtype = self._aws_configuration.aws_S3_types
+        s3_Subtype = self._aws_configuration.aws_s3_types
 
         try:
 
             if s3_Subtype == S3SubTypes.S3_CRED:
 
                 aws_access_key_id = self._aws_configuration.aws_key
-                aws_secret_access_key = self._aws_configuration.aws_secretKey
+                aws_secret_access_key = self._aws_configuration.aws_secret_key
 
                 self._execute_s3_upload(
                     file_body=files,

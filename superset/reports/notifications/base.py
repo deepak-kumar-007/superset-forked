@@ -36,7 +36,6 @@ class NotificationContent:
 
 @dataclass
 class AwsConfiguration:
-    # pylint: disable=invalid-name
     aws_key: Optional[str] = None
     aws_secret_key: Optional[str] = None
     aws_s3_types: Optional[str] = None

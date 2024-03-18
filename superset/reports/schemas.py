@@ -262,9 +262,9 @@ class ReportSchedulePostSchema(Schema):
 
         if (
             data["recipients"][0]["type"] == ReportRecipientType.S3
-            and data["aws_S3_types"] == S3SubTypes.S3_CRED
+            and data["aws_s3_types"] == S3SubTypes.S3_CRED
         ):
-            if data["aws_key"] is None or data["aws_secretKey"] is None:
+            if data["aws_key"] is None or data["aws_secret_key"] is None:
                 raise ValidationError(
                     {
                         "aws credentials": [

@@ -396,13 +396,12 @@ class BaseReportState:
             header_data=header_data,
         )
     def _get_aws_configuration(self) -> AwsConfiguration:
-        # pylint: disable=invalid-name
         aws_key = self._report_schedule.aws_key
         aws_secret_key = self._report_schedule.aws_secret_key
         aws_s3_types = self._report_schedule.aws_s3_types
 
         return AwsConfiguration(
-            aws_key=aws_key, aws_secretKey=aws_secret_key, aws_S3_types=aws_s3_types
+            aws_key=aws_key, aws_secret_key=aws_secret_key, aws_s3_types=aws_s3_types
         )
 
     def _send(
