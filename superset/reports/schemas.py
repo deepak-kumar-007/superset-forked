@@ -265,6 +265,18 @@ class ReportSchedulePostSchema(Schema):
 
         if (
             data["recipients"][0]["type"] == ReportRecipientType.S3
+            and data["aws_s3_types"] not in vars(S3SubTypes).values()
+        ):
+            
+                raise ValidationError(
+                    {
+                        "aws s3 types": [
+                            "Not a supported aws s3 sub types"
+                        ]
+                    }
+                )
+        if (
+            data["recipients"][0]["type"] == ReportRecipientType.S3
             and data["aws_s3_types"] == S3SubTypes.S3_CRED
         ):
             if data["aws_key"] is None or data["aws_secret_key"] is None:

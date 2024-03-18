@@ -120,7 +120,7 @@ def test_report_post_schema_custom_width_validation_with_aws_fields(mocker: Mock
                 "custom_width": 1000,
                 "recipients": [{"type": "S3"}],
                 "aws_key": "valid_key",
-                "aws_secret_key": "valid_secret_key",  # Invalid, missing AWS secret key
+                "aws_secret_key": "valid_secret_key",
                 "aws_s3_types": s3_type,
             }
         )
