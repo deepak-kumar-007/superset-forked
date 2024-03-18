@@ -391,7 +391,7 @@ def cached_common_bootstrap_data(  # pylint: disable=unused-argument
         for k in FRONTEND_CONF_KEYS
     }
 
-    isAwsConfigured = (
+    is_aws_configured = (
         get_feature_flags()["ENABLE_AWS"]
         if "ENABLE_AWS" in get_feature_flags()
         else False
@@ -402,7 +402,7 @@ def cached_common_bootstrap_data(  # pylint: disable=unused-argument
         frontend_config["ALERT_REPORTS_NOTIFICATION_METHODS"].append(
             ReportRecipientType.SLACK
         )
-    if isAwsConfigured:
+    if is_aws_configured:
         frontend_config["ALERT_REPORTS_NOTIFICATION_METHODS"].append(
             ReportRecipientType.S3
         )
