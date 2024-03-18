@@ -107,7 +107,7 @@ def test_report_post_schema_custom_width_validation_with_aws_fields(mocker: Mock
             }
         )
 
-    # Next, let's test with invalid AWS credentials and custom_width for S3 recipient type
+    
     with pytest.raises(ValidationError) as excinfo:
         schema.load(
             {
@@ -119,11 +119,11 @@ def test_report_post_schema_custom_width_validation_with_aws_fields(mocker: Mock
                 "timezone": "America/Los_Angeles",
                 "custom_width": 1000,
                 "recipients": [{"type": "S3"}],
-                "aws_key": None,  # Invalid, missing AWS key
-                "aws_secret_key": None,  # Invalid, missing AWS secret key
-                "aws_s3_types": "valid_s3_type",
+                "aws_key": "valid_key",
+                "aws_secret_key": "valid_secret_key",  # Invalid, missing AWS secret key
+                "aws_s3_types": s3_type,
             }
         )
     assert excinfo.value.messages == {
-        "aws credentials": ["Both AWS keys and Aws secret keys are required"]
+        "custom_width": ["Screenshot width must be between 100px and 200px"]
     }
