@@ -26,7 +26,7 @@ import boto3
 from superset import app
 from superset.exceptions import SupersetErrorsException
 from superset.reports.models import ReportRecipientType
-from superset.reports.notifications.base import AwsConfiguration, BaseNotification
+from superset.reports.notifications.base import BaseNotification
 from superset.reports.notifications.exceptions import NotificationError
 
 logger = logging.getLogger(__name__)
