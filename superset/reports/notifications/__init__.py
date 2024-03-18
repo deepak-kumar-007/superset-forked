@@ -28,7 +28,7 @@ from superset.reports.notifications.slack import SlackNotification
 def create_notification(
     recipient: ReportRecipients,
     notification_content: NotificationContent,
-    aws_configuration: AwsConfiguration = None
+    aws_configuration: AwsConfiguration = None,
 ) -> BaseNotification:
     """
     Notification polymorphic factory

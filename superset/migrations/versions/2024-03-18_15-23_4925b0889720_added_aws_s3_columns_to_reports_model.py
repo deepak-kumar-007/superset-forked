@@ -23,13 +23,14 @@ Create Date: 2024-03-18 15:23:10.575512
 """
 
 # revision identifiers, used by Alembic.
-revision = '4925b0889720'
-down_revision = 'be1b217cd8cd'
+revision = "4925b0889720"
+down_revision = "be1b217cd8cd"
 
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy_utils import EncryptedType
+
 
 def upgrade():
 

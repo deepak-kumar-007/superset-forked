@@ -104,8 +104,8 @@ SQLLAB_CTAS_NO_LIMIT = True
 FEATURE_FLAGS = {"ALERT_REPORTS": True, "ENABLE_AWS": True}
 ALERT_REPORTS_NOTIFICATION_DRY_RUN = False
 # AWS Credentials
-AWS_ACCESS_KEY = '####'
-AWS_SECRET_KEY = '####'
+AWS_ACCESS_KEY = "####"
+AWS_SECRET_KEY = "####"
 
 #
 # Optionally import superset_config_docker.py (which will have been included on

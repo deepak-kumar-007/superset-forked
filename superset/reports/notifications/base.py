@@ -34,6 +34,7 @@ class NotificationContent:
     url: Optional[str] = None  # url to chart/dashboard for this screenshot
     embedded_data: Optional[pd.DataFrame] = None
 
+
 @dataclass
 class AwsConfiguration:
     aws_key: Optional[str] = None
@@ -61,9 +62,10 @@ class BaseNotification:  # pylint: disable=too-few-public-methods
         cls.plugins.append(cls)
 
     def __init__(
-        self, recipient: ReportRecipients,
+        self,
+        recipient: ReportRecipients,
         content: NotificationContent,
-        aws_configuration: AwsConfiguration = None
+        aws_configuration: AwsConfiguration = None,
     ) -> None:
         self._recipient = recipient
         self._content = content

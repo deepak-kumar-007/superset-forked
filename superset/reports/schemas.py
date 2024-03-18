@@ -255,10 +255,13 @@ class ReportSchedulePostSchema(Schema):
                 raise ValidationError(
                     {"database": ["Database reference is not allowed on a report"]}
                 )
+
     @validates_schema
-    def validate_aws_fields(
-        self, data, **kwargs
-    ):  # pylint: disable=unused-argument,no-self-use
+    def validate_aws_fields(  # pylint: disable=unused-argument
+        self,
+        data: dict[str, Any],
+        **kwargs: Any,
+    ) -> None:
 
         if (
             data["recipients"][0]["type"] == ReportRecipientType.S3
