@@ -18,6 +18,7 @@ import datetime
 import json
 import logging
 from io import BytesIO
+from typing import Any, Optional
 from uuid import uuid4
 
 import boto3
@@ -25,7 +26,7 @@ import boto3
 from superset import app
 from superset.exceptions import SupersetErrorsException
 from superset.reports.models import ReportRecipientType
-from superset.reports.notifications.base import BaseNotification
+from superset.reports.notifications.base import AwsConfiguration, BaseNotification
 from superset.reports.notifications.exceptions import NotificationError
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
     # pylint: disable= too-many-arguments, invalid-name
     type = ReportRecipientType.S3
 
-    def _get_inline_files(self):
+    def _get_inline_files(self) -> dict[Any, Any]:
         current_datetime = datetime.datetime.now()
         formatted_date = current_datetime.strftime("%Y-%m-%d")
         report_name = self._content.name
@@ -62,16 +63,16 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                 for screenshot in self._content.screenshots
             }
             return images
-        return []
+        return {}
 
     def _execute_s3_upload(
         self,
-        file_body,
-        bucket_name,
-        contentType,
-        aws_access_key_id=None,
-        aws_secret_access_key=None,
-    ):
+        file_body: dict[Any, Any],
+        bucket_name: str,
+        contentType: str,
+        aws_access_key_id: Optional[str] = None,
+        aws_secret_access_key: Optional[str] = None,
+    ) -> None:
         for key, file in file_body.items():
             file = BytesIO(file)
             s3 = boto3.client(
@@ -94,16 +95,14 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                 self._content.header_data,
             )
 
-    def send(self):
+    def send(self) -> None:
         files = self._get_inline_files()
         file_type = "csv" if self._content.csv else "png"
         bucket_name = json.loads(self._recipient.recipient_config_json)["target"]
-        s3_Subtype = self._aws_configuration.aws_s3_types
+        s3_subtype = self._aws_configuration.aws_s3_types
 
         try:
-
-            if s3_Subtype == S3SubTypes.S3_CRED:
-
+            if s3_subtype == S3SubTypes.S3_CRED:
                 aws_access_key_id = self._aws_configuration.aws_key
                 aws_secret_access_key = self._aws_configuration.aws_secret_key
 
@@ -115,13 +114,12 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                     aws_secret_access_key=aws_secret_access_key,
                 )
 
-            elif s3_Subtype == S3SubTypes.S3_ROLE:
+            elif s3_subtype == S3SubTypes.S3_ROLE:
                 self._execute_s3_upload(
                     file_body=files, bucket_name=bucket_name, contentType=file_type
                 )
 
-            elif s3_Subtype == S3SubTypes.S3_CONFIG:
-
+            elif s3_subtype == S3SubTypes.S3_CONFIG:
                 aws_access_key_id = app.config["AWS_ACCESS_KEY"]
                 aws_secret_access_key = app.config["AWS_SECRET_KEY"]
 

@@ -33,7 +33,6 @@ from sqlalchemy_utils import EncryptedType
 
 
 def upgrade():
-
     op.add_column(
         "report_schedule",
         sa.Column("aws_key", EncryptedType(sa.String(1024)), nullable=True),

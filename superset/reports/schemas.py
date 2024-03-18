@@ -262,12 +262,10 @@ class ReportSchedulePostSchema(Schema):
         data: dict[str, Any],
         **kwargs: Any,
     ) -> None:
-
         if (
             data["recipients"][0]["type"] == ReportRecipientType.S3
             and data["aws_s3_types"] not in vars(S3SubTypes).values()
         ):
-
             raise ValidationError(
                 {"aws s3 types": ["Not a supported aws s3 sub types"]}
             )
