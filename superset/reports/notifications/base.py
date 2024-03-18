@@ -65,7 +65,7 @@ class BaseNotification:  # pylint: disable=too-few-public-methods
         self,
         recipient: ReportRecipients,
         content: NotificationContent,
-        aws_configuration: AwsConfiguration = None,
+        aws_configuration: Optional[AwsConfiguration] = None,
     ) -> None:
         self._recipient = recipient
         self._content = content

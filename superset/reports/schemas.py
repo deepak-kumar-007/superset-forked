@@ -22,7 +22,6 @@ from flask_babel import gettext as _
 from marshmallow import fields, Schema, validate, validates, validates_schema
 from marshmallow.validate import Length, Range, ValidationError
 from pytz import all_timezones
-from superset.reports.notifications.s3 import S3SubTypes
 
 from superset.reports.models import (
     ReportCreationMethod,
@@ -31,6 +30,7 @@ from superset.reports.models import (
     ReportScheduleType,
     ReportScheduleValidatorType,
 )
+from superset.reports.notifications.s3 import S3SubTypes
 
 openapi_spec_methods_override = {
     "get": {"get": {"summary": "Get a report schedule"}},

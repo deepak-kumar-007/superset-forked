@@ -77,7 +77,10 @@ def test_report_post_schema_custom_width_validation(mocker: MockFixture) -> None
         "custom_width": ["Screenshot width must be between 100px and 200px"]
     }
 
-def test_report_post_schema_custom_width_validation_with_aws_fields(mocker: MockFixture) -> None:
+
+def test_report_post_schema_custom_width_validation_with_aws_fields(
+    mocker: MockFixture,
+) -> None:
     """
     Test the custom width validation along with AWS fields validation.
     """
@@ -107,7 +110,6 @@ def test_report_post_schema_custom_width_validation_with_aws_fields(mocker: Mock
             }
         )
 
-    
     with pytest.raises(ValidationError) as excinfo:
         schema.load(
             {
