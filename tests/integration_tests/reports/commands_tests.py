@@ -1986,16 +1986,16 @@ def test__send_with_client_errors(notification_mock, logger_mock):
 class ReportRecipient:
     def __init__(self, type, config):
         self.type=type
-        self.recipient_config_json=config
+        self.target=config
 
 @patch("superset.commands.report.execute.logger")
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_multiple_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
-    config_json = {"target": "test@foo.com,test2@bar.com"}
+    target = {"test@foo.com,test2@bar.com"}
     recipients = [ReportRecipient(
                             type='Email',
-                            config=json.dumps(config_json),
+                            config=json.dumps(target),
                         )]
     notification_mock.return_value.send.side_effect = [
         NotificationParamException(),
