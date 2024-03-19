@@ -370,6 +370,9 @@ class TestReportSchedulesApi(SupersetTestCase):
             "recipients",
             "timezone",
             "type",
+            'aws_key',
+            'aws_s3_types',
+            'aws_secret_key',
         ]
         assert rv.status_code == 200
         data = json.loads(rv.data.decode("utf-8"))
