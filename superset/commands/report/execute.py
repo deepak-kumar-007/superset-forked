@@ -417,13 +417,13 @@ class BaseReportState:
         """
         notification_errors: list[SupersetError] = []
         for recipient in recipients:
-            if recipient.type == ReportRecipientType.S3:
-                aws_configuration = self._get_aws_configuration()
-                notification = create_notification(
-                    recipient, notification_content, aws_configuration
-                )
-            else:
-                notification = create_notification(recipient, notification_content)
+            # if recipient.type == ReportRecipientType.S3:
+            #     aws_configuration = self._get_aws_configuration()
+            #     notification = create_notification(
+            #         recipient, notification_content, aws_configuration
+            #     )
+            # else:
+            notification = create_notification(recipient, notification_content)
             try:
                 if app.config["ALERT_REPORTS_NOTIFICATION_DRY_RUN"]:
                     logger.info(
