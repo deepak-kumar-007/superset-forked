@@ -350,9 +350,9 @@ class TestReportSchedulesApi(SupersetTestCase):
 
         expected_fields = [
             "active",
-            'aws_key',
-            'aws_s3_types',
-            'aws_secret_key',
+            "aws_key",
+            "aws_s3_types",
+            "aws_secret_key",
             "changed_by",
             "changed_on",
             "changed_on_delta_humanized",
@@ -985,6 +985,16 @@ class TestReportSchedulesApi(SupersetTestCase):
             "description": "description",
             "creation_method": ReportCreationMethod.DASHBOARDS,
             "crontab": "0 9 * * *",
+            "recipients": [
+                {
+                    "type": ReportRecipientType.EMAIL,
+                    "recipient_config_json": {"target": "target@superset.org"},
+                },
+                {
+                    "type": ReportRecipientType.SLACK,
+                    "recipient_config_json": {"target": "channel"},
+                },
+            ],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
