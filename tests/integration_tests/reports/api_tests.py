@@ -981,6 +981,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "working_timeout": 3600,
             "chart": chart.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -997,6 +998,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "working_timeout": 3600,
             "chart": chart.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1039,6 +1041,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "working_timeout": 3600,
             "dashboard": dashboard.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1055,6 +1058,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "working_timeout": 3600,
             "dashboard": dashboard.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1098,6 +1102,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "chart": chart.id,
             "dashboard": dashboard.id,
             "database": example_db.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1121,6 +1126,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "creation_method": ReportCreationMethod.ALERTS_REPORTS,
             "crontab": "0 9 * * *",
             "chart": chart.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1148,6 +1154,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "chart": chart_max_id + 1,
             "database": database_max_id + 1,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
@@ -1157,6 +1164,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "message": {
                 "chart": "Chart does not exist",
                 "database": "Database does not exist",
+                "recipients": [{"type": "Email"}],
             }
         }
 
@@ -1170,6 +1178,7 @@ class TestReportSchedulesApi(SupersetTestCase):
             "creation_method": ReportCreationMethod.ALERTS_REPORTS,
             "dashboard": dashboard_max_id + 1,
             "database": examples_db.id,
+            "recipients": [{"type": "Email"}],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
