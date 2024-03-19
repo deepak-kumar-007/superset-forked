@@ -69,7 +69,7 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
         self,
         file_body: dict[Any, Any],
         bucket_name: str,
-        contentType: str,
+        content_type: str,
         aws_access_key_id: Optional[str] = None,
         aws_secret_access_key: Optional[str] = None,
     ) -> None:
@@ -86,7 +86,7 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                 key,
                 ExtraArgs={
                     "Metadata": {"Content-Disposition": "inline"},
-                    "ContentType": contentType,
+                    "content_type": content_type,
                 },
             )
 
@@ -109,14 +109,14 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                 self._execute_s3_upload(
                     file_body=files,
                     bucket_name=bucket_name,
-                    contentType=file_type,
+                    content_type=file_type,
                     aws_access_key_id=aws_access_key_id,
                     aws_secret_access_key=aws_secret_access_key,
                 )
 
             elif s3_subtype == S3SubTypes.S3_ROLE:
                 self._execute_s3_upload(
-                    file_body=files, bucket_name=bucket_name, contentType=file_type
+                    file_body=files, bucket_name=bucket_name, content_type=file_type
                 )
 
             elif s3_subtype == S3SubTypes.S3_CONFIG:
@@ -126,7 +126,7 @@ class S3Notification(BaseNotification):  # pylint: disable=too-few-public-method
                 self._execute_s3_upload(
                     file_body=files,
                     bucket_name=bucket_name,
-                    contentType=file_type,
+                    content_type=file_type,
                     aws_access_key_id=aws_access_key_id,
                     aws_secret_access_key=aws_secret_access_key,
                 )
