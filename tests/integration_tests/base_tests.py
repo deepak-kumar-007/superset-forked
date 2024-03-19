@@ -85,6 +85,7 @@ def post_assert_metric(
     with patch.object(
         BaseSupersetModelRestApi, "incr_stats", return_value=None
     ) as mock_method:
+        print("The data is of payload>>>>>>>>>>>>>>>>>>", data)
         rv = client.post(uri, json=data)
     if 200 <= rv.status_code < 400:
         mock_method.assert_called_once_with("success", func_name)
