@@ -350,6 +350,9 @@ class TestReportSchedulesApi(SupersetTestCase):
 
         expected_fields = [
             "active",
+            'aws_key',
+            'aws_s3_types',
+            'aws_secret_key',
             "changed_by",
             "changed_on",
             "changed_on_delta_humanized",
@@ -370,9 +373,6 @@ class TestReportSchedulesApi(SupersetTestCase):
             "recipients",
             "timezone",
             "type",
-            'aws_key',
-            'aws_s3_types',
-            'aws_secret_key',
         ]
         assert rv.status_code == 200
         data = json.loads(rv.data.decode("utf-8"))
