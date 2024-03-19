@@ -1983,14 +1983,18 @@ def test__send_with_client_errors(notification_mock, logger_mock):
         "SupersetError(message='', error_type=<SupersetErrorType.REPORT_NOTIFICATION_ERROR: 'REPORT_NOTIFICATION_ERROR'>, level=<ErrorLevel.WARNING: 'warning'>, extra=None)"
     )
 
+class ReportRecipient:
+    def __init__(self, type, config):
+        self.type=type
+        self.recipient_config_json=config
 
 @patch("superset.commands.report.execute.logger")
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_multiple_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
     config_json = {"target": "test@foo.com,test2@bar.com"}
-    recipients = [ReportRecipients(
-                            type=ReportRecipientType.EMAIL,
+    recipients = [ReportRecipient(
+                            type='Email',
                             recipient_config_json=json.dumps(config_json),
                         )]
     notification_mock.return_value.send.side_effect = [
