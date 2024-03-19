@@ -1995,7 +1995,7 @@ def test__send_with_multiple_errors(notification_mock, logger_mock):
     config_json = {"target": "test@foo.com,test2@bar.com"}
     recipients = [ReportRecipient(
                             type='Email',
-                            recipient_config_json=json.dumps(config_json),
+                            config=json.dumps(config_json),
                         )]
     notification_mock.return_value.send.side_effect = [
         NotificationParamException(),
