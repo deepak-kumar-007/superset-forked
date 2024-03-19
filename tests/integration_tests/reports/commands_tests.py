@@ -1992,10 +1992,10 @@ class ReportRecipient:
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_multiple_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
-    target = {"test@foo.com,test2@bar.com"}
+    target = ["test@foo.com","test2@bar.com"]
     recipients = [ReportRecipient(
                             type='Email',
-                            config=json.dumps(target),
+                            config=target,
                         )]
     notification_mock.return_value.send.side_effect = [
         NotificationParamException(),
