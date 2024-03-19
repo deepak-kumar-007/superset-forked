@@ -688,6 +688,16 @@ class TestReportSchedulesApi(SupersetTestCase):
             "crontab": "0 9 * * *",
             "chart": chart.id,
             "database": example_db.id,
+            "recipients": [
+                {
+                    "type": ReportRecipientType.EMAIL,
+                    "recipient_config_json": {"target": "target@superset.org"},
+                },
+                {
+                    "type": ReportRecipientType.SLACK,
+                    "recipient_config_json": {"target": "channel"},
+                },
+            ],
         }
         uri = "api/v1/report/"
         rv = self.post_assert_metric(uri, report_schedule_data, "post")
