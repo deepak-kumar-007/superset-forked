@@ -19,6 +19,7 @@ set -e
 
 # Packages needed for puppeteer:
 apt update
+chmod -R 777 /root
 if [ "$PUPPETEER_SKIP_CHROMIUM_DOWNLOAD" = "false" ]; then
     apt install -y chromium
 fi

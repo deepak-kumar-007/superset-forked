@@ -43,6 +43,7 @@ def test_report_post_schema_custom_width_validation(mocker: MockFixture) -> None
             "crontab": "* * * * *",
             "timezone": "America/Los_Angeles",
             "custom_width": 100,
+            "recipients": [{"type": "Email"}],
         }
     )
 
@@ -55,6 +56,7 @@ def test_report_post_schema_custom_width_validation(mocker: MockFixture) -> None
             "active": True,
             "crontab": "* * * * *",
             "timezone": "America/Los_Angeles",
+            "recipients": [{"type": "Email"}],
         }
     )
 
@@ -68,6 +70,60 @@ def test_report_post_schema_custom_width_validation(mocker: MockFixture) -> None
                 "crontab": "* * * * *",
                 "timezone": "America/Los_Angeles",
                 "custom_width": 1000,
+                "recipients": [{"type": "Email"}],
+            }
+        )
+    assert excinfo.value.messages == {
+        "custom_width": ["Screenshot width must be between 100px and 200px"]
+    }
+
+
+def test_report_post_schema_custom_width_validation_with_aws_fields(
+    mocker: MockFixture,
+) -> None:
+    """
+    Test the custom width validation along with AWS fields validation.
+    """
+    current_app = mocker.patch("superset.reports.schemas.current_app")
+    current_app.config = {
+        "ALERT_REPORTS_MIN_CUSTOM_SCREENSHOT_WIDTH": 100,
+        "ALERT_REPORTS_MAX_CUSTOM_SCREENSHOT_WIDTH": 200,
+    }
+    valid_s3_types = ["AWS_S3_credentials", "AWS_S3_pyconfig", "AWS_S3_IAM"]
+    schema = ReportSchedulePostSchema()
+
+    for s3_type in valid_s3_types:
+        # Test with valid AWS credentials and custom_width for each valid S3 type
+        schema.load(
+            {
+                "type": "Report",
+                "name": "A report",
+                "description": "My report",
+                "active": True,
+                "crontab": "* * * * *",
+                "timezone": "America/Los_Angeles",
+                "custom_width": 100,
+                "recipients": [{"type": "S3"}],
+                "aws_key": "valid_key",
+                "aws_secret_key": "valid_secret_key",
+                "aws_s3_types": s3_type,
+            }
+        )
+
+    with pytest.raises(ValidationError) as excinfo:
+        schema.load(
+            {
+                "type": "Report",
+                "name": "A report",
+                "description": "My report",
+                "active": True,
+                "crontab": "* * * * *",
+                "timezone": "America/Los_Angeles",
+                "custom_width": 1000,
+                "recipients": [{"type": "S3"}],
+                "aws_key": "valid_key",
+                "aws_secret_key": "valid_secret_key",
+                "aws_s3_types": s3_type,
             }
         )
     assert excinfo.value.messages == {

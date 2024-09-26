@@ -70,6 +70,8 @@ from superset.reports.models import (
     ReportScheduleType,
     ReportScheduleValidatorType,
     ReportState,
+    ReportRecipients,
+    ReportRecipientType,
 )
 from superset.reports.notifications.exceptions import (
     NotificationError,
@@ -1967,7 +1969,11 @@ def test_prune_log_soft_time_out(bulk_delete_logs, create_report_email_dashboard
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_client_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
-    recipients = ["test@foo.com"]
+    config_json = {"target": "test@foo.com"}
+    recipients = [ReportRecipients(
+                            type=ReportRecipientType.EMAIL,
+                            recipient_config_json=json.dumps(config_json),
+                        )]
     notification_mock.return_value.send.side_effect = NotificationParamException()
     with pytest.raises(ReportScheduleClientErrorsException) as excinfo:
         BaseReportState._send(BaseReportState, notification_content, recipients)
@@ -1982,7 +1988,11 @@ def test__send_with_client_errors(notification_mock, logger_mock):
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_multiple_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
-    recipients = ["test@foo.com", "test2@bar.com"]
+    config_json = {"target": "test@foo.com,test2@bar.com"}
+    recipients = [ReportRecipients(
+                            type=ReportRecipientType.EMAIL,
+                            recipient_config_json=json.dumps(config_json),
+                        )]
     notification_mock.return_value.send.side_effect = [
         NotificationParamException(),
         NotificationError(),
@@ -2009,7 +2019,11 @@ def test__send_with_multiple_errors(notification_mock, logger_mock):
 @patch("superset.commands.report.execute.create_notification")
 def test__send_with_server_errors(notification_mock, logger_mock):
     notification_content = "I am some content"
-    recipients = ["test@foo.com"]
+    config_json = {"target": "test@foo.com"}
+    recipients = [ReportRecipients(
+                            type=ReportRecipientType.EMAIL,
+                            recipient_config_json=json.dumps(config_json),
+                        )]
     notification_mock.return_value.send.side_effect = NotificationError()
     with pytest.raises(ReportScheduleSystemErrorsException) as excinfo:
         BaseReportState._send(BaseReportState, notification_content, recipients)

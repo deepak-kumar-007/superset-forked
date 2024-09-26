@@ -64,7 +64,7 @@ from superset.reports.models import (
     ReportState,
 )
 from superset.reports.notifications import create_notification
-from superset.reports.notifications.base import NotificationContent
+from superset.reports.notifications.base import AwsConfiguration, NotificationContent
 from superset.reports.notifications.exceptions import NotificationError
 from superset.tasks.utils import get_executor
 from superset.utils.core import HeaderDataType, override_user
@@ -396,6 +396,15 @@ class BaseReportState:
             header_data=header_data,
         )
 
+    def _get_aws_configuration(self) -> AwsConfiguration:
+        aws_key = self._report_schedule.aws_key
+        aws_secret_key = self._report_schedule.aws_secret_key
+        aws_s3_types = self._report_schedule.aws_s3_types
+
+        return AwsConfiguration(
+            aws_key=aws_key, aws_secret_key=aws_secret_key, aws_s3_types=aws_s3_types
+        )
+
     def _send(
         self,
         notification_content: NotificationContent,
@@ -408,7 +417,13 @@ class BaseReportState:
         """
         notification_errors: list[SupersetError] = []
         for recipient in recipients:
-            notification = create_notification(recipient, notification_content)
+            if recipient.type == ReportRecipientType.S3:
+                aws_configuration = self._get_aws_configuration()
+                notification = create_notification(
+                    recipient, notification_content, aws_configuration
+                )
+            else:
+                notification = create_notification(recipient, notification_content)
             try:
                 if app.config["ALERT_REPORTS_NOTIFICATION_DRY_RUN"]:
                     logger.info(
@@ -426,9 +441,9 @@ class BaseReportState:
                     SupersetError(
                         message=ex.message,
                         error_type=SupersetErrorType.REPORT_NOTIFICATION_ERROR,
-                        level=ErrorLevel.ERROR
-                        if ex.status >= 500
-                        else ErrorLevel.WARNING,
+                        level=(
+                            ErrorLevel.ERROR if ex.status >= 500 else ErrorLevel.WARNING
+                        ),
                     )
                 )
         if notification_errors:

@@ -30,6 +30,7 @@ from superset.reports.models import (
     ReportScheduleType,
     ReportScheduleValidatorType,
 )
+from superset.reports.notifications.s3 import S3SubTypes
 
 openapi_spec_methods_override = {
     "get": {"get": {"summary": "Get a report schedule"}},
@@ -211,6 +212,9 @@ class ReportSchedulePostSchema(Schema):
         dump_default=None,
     )
     force_screenshot = fields.Boolean(dump_default=False)
+    aws_key = fields.String(default=None, missing=None)
+    aws_secret_key = fields.String(default=None, missing=None)
+    aws_s3_types = fields.String(default=None, missing=None)
     custom_width = fields.Integer(
         metadata={
             "description": _("Custom width of the screenshot in pixels"),
@@ -250,6 +254,32 @@ class ReportSchedulePostSchema(Schema):
             if "database" in data:
                 raise ValidationError(
                     {"database": ["Database reference is not allowed on a report"]}
+                )
+
+    @validates_schema
+    def validate_aws_fields(  # pylint: disable=unused-argument
+        self,
+        data: dict[str, Any],
+        **kwargs: Any,
+    ) -> None:
+        if (
+            data["recipients"][0]["type"] == ReportRecipientType.S3
+            and data["aws_s3_types"] not in vars(S3SubTypes).values()
+        ):
+            raise ValidationError(
+                {"aws s3 types": ["Not a supported aws s3 sub types"]}
+            )
+        if (
+            data["recipients"][0]["type"] == ReportRecipientType.S3
+            and data["aws_s3_types"] == S3SubTypes.S3_CRED
+        ):
+            if data["aws_key"] is None or data["aws_secret_key"] is None:
+                raise ValidationError(
+                    {
+                        "aws credentials": [
+                            "Both AWS keys and Aws secret keys are required"
+                        ]
+                    }
                 )
 
 
@@ -350,6 +380,9 @@ class ReportSchedulePutSchema(Schema):
         required=False,
         default=None,
     )
+    aws_key = fields.String(default=None, missing=None)
+    aws_secret_key = fields.String(default=None, missing=None)
+    aws_s3_types = fields.String(default=None, missing=None)
 
     @validates("custom_width")
     def validate_custom_width(
